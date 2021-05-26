@@ -14,25 +14,49 @@ def content_main():
     if st.button("Click to get post analysis and content suggestions"):
         if group_id and post:
             if image:
-                best_suggestion,score,trend_score,kw,sentiment_score = get_suggestions(post,group_id,image)
+                best_suggestion,score,trend_score,kw,sentiment_score,x = get_suggestions(post,group_id,image)
             elif video:
-                best_suggestion,score,trend_score,kw,sentiment_score = get_suggestions(post,group_id,False,True)
+                best_suggestion,score,trend_score,kw,sentiment_score,x = get_suggestions(post,group_id,False,True)
             else:
-                best_suggestion,score,trend_score,kw,sentiment_score = get_suggestions(post,group_id,False,False)
+                best_suggestion,score,trend_score,kw,sentiment_score,x = get_suggestions(post,group_id,False,False)
         elif group_id and image:
             st.write("No text in post is a bad idea. Try again")
 
         try:
+
+            image_type_dict = {1:'Meme',-1:'Infographic/Graphs/Chart',0 : 'Other'}
+
+            question_mark = 'Yes' if x[1] == 1 else "No"
+            hashtag_count = x[2]
+            url_check = 'Yes' if x[3] == 1 else "No"
+            word_count = x[5]
+            image_status = 'Yes' if x[8] == 1 else "No"
+            image_type = image_type_dict[x[9]]
+            video = 'Yes' if x[10] == 1 else "No"
+
+
             st.header(f"Current Post Score: {round(score*1000,5)}")
             c1, c2 = st.beta_columns((1, 2))
             c1.subheader(f"Suggestion :")
             c2.subheader(f"{best_suggestion}")
             st.markdown("***")
-            c3, c4 = st.beta_columns((1, 2))
+            c3, c4 = st.beta_columns((1, 1))
+            c3.subheader(f"Question in post:  {question_mark}")
+            c3.subheader(f"Number of Hashtags:  {hashtag_count}")
+            c3.subheader(f"Links and URLs in post:  {url_check}")
+            c3.subheader(f"Word count:  {word_count}")
             c3.subheader(f"Trend Score: {trend_score}")
             c3.subheader(f"Sentiment Score: {sentiment_score}")
             df = pd.DataFrame({'Keywords extracted for trends':kw})
             c4.dataframe(df)
+            if image_status == 'Yes':
+                c4.subheader(f"Image:")
+                c4.image(image,width=400) # Manually Adjust the width of the image as per requirement
+                c4.subheader(f"Image Type: {image_type}")
+            else:
+                c4.subheader(f"Image: No")
+
+        
             #c5, c6 = st.beta_columns((1, 2))
             #c5.subheader(f"Sentiment Score: {sentiment_score}")
         except Exception as e:

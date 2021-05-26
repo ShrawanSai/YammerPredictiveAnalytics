@@ -273,7 +273,7 @@ def get_suggestions(post,group_id,image = False,video = False):
     
     #print('--------------------------------------')
     #print(trend_score,kw,sentiment_score,y_pred[0])
-    return define_best_suggestion(best_suggestion),y_pred[0],trend_score,kw,sentiment_score
+    return define_best_suggestion(best_suggestion),y_pred[0],trend_score,kw,sentiment_score,x
 
 if __name__ == '__main__':
     print(get_suggestions('''Deep learning becomes more interesting if you study matrix and tensors. It is interesting to note that scalars and vectors should be taken vis-à-vis with these two concepts for a full appreciation of their application. I love how simple ans easy it is to use! Good luck all!
