@@ -139,7 +139,7 @@ def text_boolean(row):
     
     
 
-def create_dataset(df):
+def create_dataset(df,number_of_group_members):
 
 
     df['image'] = df['image'].fillna(0)
@@ -148,7 +148,7 @@ def create_dataset(df):
     df = df[['text', 'image', 'video', 'likes',
         'comments', 'shares']]
 
-    number_of_group_members = 26000
+    
 
     df['engagement_score'] = (df['likes'] + df['comments'] + 2*df['shares'])/number_of_group_members
 
@@ -172,8 +172,8 @@ def create_dataset(df):
 
     df['image'] = df.apply(image_as_boolean, axis=1)
     df['video'] = df.apply(video_as_boolean, axis=1)
-    df['image_type'] = df.apply(image_check, axis=1)
-
+    df['image_type_bool'] = df.apply(image_check, axis=1)
+    df = df.drop(['image_type'], axis=1)
 
     df['trend_score'] = df.apply(trend_status, axis=1)
 
@@ -182,19 +182,21 @@ def create_dataset(df):
 
     df = df[['text','question_mark_check',
         'hashtag_check', 'url_check', 'lexical_diversity', 'words_count',
-        'sentiment', 'image_type', 'trend_score','image','image_type','video','engagement_score']]
+        'sentiment', 'trend_score','image','image_type_bool','video','engagement_score']]
 
     return df
 
 
+group_str = [45000,108900,20100,101400]
 
+groups = ['143322019583033.csv','546588969267691.csv','InsaneTech.csv','pypcom.csv']
 
-for i in ['143322019583033.csv','546588969267691.csv','InsaneTech.csv','pypcom.csv']:
+for i in range(len(groups)):
     
-    df = pd.read_csv(i)
+    df = pd.read_csv(groups[i])
     print(i)
-    f = create_dataset(df)
+    f = create_dataset(df,group_str[i])
     print(len(f))
-    f.to_csv(f'{i}_processed.py')
+    f.to_csv(f'{i}_processed.csv')
 
 
