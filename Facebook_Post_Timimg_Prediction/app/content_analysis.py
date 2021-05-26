@@ -37,8 +37,9 @@ def content_main():
 
             st.header(f"Current Post Score: {round(score*1000,5)}")
             c1, c2 = st.beta_columns((1, 2))
-            c1.subheader(f"Suggestion :")
-            c2.subheader(f"{best_suggestion}")
+            c1.subheader(f"Suggestions :")
+            for i in range(len(best_suggestion)):
+                c2.subheader(f"{i+1}. {best_suggestion[i]}")
             st.markdown("***")
             c3, c4 = st.beta_columns((1, 1))
             c3.subheader(f"Question in post:  {question_mark}")

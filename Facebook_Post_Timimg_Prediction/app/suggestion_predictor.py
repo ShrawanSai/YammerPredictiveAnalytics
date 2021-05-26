@@ -5,6 +5,7 @@ from rake_nltk import Rake
 from meme_or_not import set_model_for_image_type,get_image_type
 from pytrends.request import TrendReq
 import pickle
+import heapq
 with open('models.pickle', 'rb') as handle:
     rf_models = pickle.load(handle)
 
@@ -270,10 +271,14 @@ def get_suggestions(post,group_id,image = False,video = False):
     y_pred = regressor.predict(input_ex)
     
     best_suggestion = np.argmax(y_pred) + 1
+    best_few = heapq.nlargest(3, range(len(y_pred)), y_pred.take)
+    if best_few[0] == 0:
+        best_few = [0]
+    best_few = [define_best_suggestion(j+1) for j in best_few]
     
     #print('--------------------------------------')
     #print(trend_score,kw,sentiment_score,y_pred[0])
-    return define_best_suggestion(best_suggestion),y_pred[0],trend_score,kw,sentiment_score,x
+    return best_few,y_pred[0],trend_score,kw,sentiment_score,x
 
 if __name__ == '__main__':
     print(get_suggestions('''Deep learning becomes more interesting if you study matrix and tensors. It is interesting to note that scalars and vectors should be taken vis-à-vis with these two concepts for a full appreciation of their application. I love how simple ans easy it is to use! Good luck all!
