@@ -7,7 +7,6 @@ import seaborn as sns
 import numpy as np
 from collections import OrderedDict
 from time import sleep
-from stqdm import stqdm
 
 
 from sklearn import linear_model
@@ -163,4 +162,28 @@ def main():
         spearman = spearmanr(y_test, predicted_test)
         pearson = pearsonr(y_test, predicted_test)
 
-        st.write("Test data R-2 score:", np.abs(test_score))
+    d = {'Monday': 1, 'Tuesday': 2, 'Wednesday': 3,
+         'Thursday': 4, 'Friday': 5, 'Saturday': 6, 'Sunday': 7}
+    post_day = st.text_input("Enter the day", "Sunday")
+
+    post_timing = st.text_input("Enter the time", "5:00 (24 hour format)")
+    hour = int(post_timing.split(" ")[0].split(':')[0])
+
+    timePivot = pd.pivot_table(df, aggfunc='median',
+                               columns='Post Hour',
+                               index='Post Weekday',
+                               values='like')
+    timePivot = timePivot[[1, 2, 3, 4, 5, 6, 7,
+                           8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]]
+
+    post_like_ratio = np.round(
+
+
+        (timePivot.iloc[0:d[post_day]][hour].values[0] / timePivot.sum().sum()), 4)
+
+    st.subheader('Find you best Time for Post ::sunglasses::')
+    if st.button("Post Time Analysis"):
+        start = int(d[post_day] - 1)
+        # st.write(timePivot.iloc[start:d[post_day]][hour].values[0])
+        st.write("You post could have the like perchentage is:",
+                 np.abs(post_like_ratio*100))
