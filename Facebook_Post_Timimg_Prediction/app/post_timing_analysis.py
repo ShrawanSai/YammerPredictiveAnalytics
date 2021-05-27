@@ -16,6 +16,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 from scipy.stats import spearmanr, pearsonr
+from datetime import date
+from datetime import datetime, timedelta
 
 
 def main():
@@ -167,23 +169,48 @@ def main():
     post_day = st.text_input("Enter the day", "Sunday")
 
     post_timing = st.text_input("Enter the time", "5:00 (24 hour format)")
-    hour = int(post_timing.split(" ")[0].split(':')[0])
-
-    timePivot = pd.pivot_table(df, aggfunc='median',
-                               columns='Post Hour',
-                               index='Post Weekday',
-                               values='like')
-    timePivot = timePivot[[1, 2, 3, 4, 5, 6, 7,
-                           8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]]
-
-    post_like_ratio = np.round(
-
-
-        (timePivot.iloc[0:d[post_day]][hour].values[0] / timePivot.sum().sum()), 4)
+    hour = int(post_timing.split(" ")[0].split(':')[0]) % 18
 
     st.subheader('Find you best Time for Post ::sunglasses::')
     if st.button("Post Time Analysis"):
         start = int(d[post_day] - 1)
+        timePivot = pd.pivot_table(df, aggfunc='median',
+                                   columns='Post Hour',
+                                   index='Post Weekday',
+                                   values='like')
+        timePivot = timePivot[[1, 2, 3, 4, 5, 6, 7,
+                               8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]]
+        timePivot = timePivot.fillna(0)
+        post_like_ratio = np.round(
+            (timePivot.iloc[start:d[post_day]][hour].values[0] / timePivot.sum().sum()), 3)
         # st.write(timePivot.iloc[start:d[post_day]][hour].values[0])
+        cond = "Very Poor ! Please choose another timing." if post_like_ratio == 0 else "You can go for it."
         st.write("You post could have the like perchentage is:",
-                 np.abs(post_like_ratio*100))
+                 post_like_ratio, cond)
+
+        # Suggestion Of next Best Time
+        st.subheader("Suggestions....")
+
+        current_date = date.today()
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
+        day = current_date.day % 7
+        hour = int(dt_string.split(" ")[1].split(":")[0])
+
+        st.write("Current Time: ->  ", dt_string)
+
+        best_like = 0
+        best_hour = 0
+        for i in range(hour, 19):
+            val = timePivot.iloc[day-1:][i].values[0]
+            if val > best_like:
+                best_like = val
+                best_hour = i
+
+        hours = best_hour-hour
+
+        next_time = now = datetime.now()+timedelta(hours=hours)
+        next_time_string = next_time.strftime("%d/%m/%Y %H:%M:%S")
+
+        st.write("Next Best Time to Post: ", next_time_string)
