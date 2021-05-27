@@ -1,6 +1,6 @@
 import streamlit as st
 import post_timing_analysis
-#from content_analysis import content_main
+from content_analysis import content_main
 
 
 def main():
@@ -25,5 +25,5 @@ if __name__ == '__main__':
     if choice == "Posts Timing Recommendation":
         post_timing_analysis.main()
 
-    # if choice == "Yammer Post Content Analysis":
-    #     content_main()
+    if choice == "Yammer Post Content Analysis":
+        content_main()
