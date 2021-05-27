@@ -18,7 +18,7 @@ def get_metrics(post,image = False,video = False):
     def question_mark_check(post):
         #print(row['text'])
         #print('? done')
-        if '? ' not in str(post):
+        if '?' not in str(post):
             val = 0
         else:
             val = 1
@@ -274,6 +274,9 @@ def get_suggestions(post,group_id,image = False,video = False):
     best_few = heapq.nlargest(3, range(len(y_pred)), y_pred.take)
     if best_few[0] == 0:
         best_few = [0]
+    if 0 in best_few:
+        best_few = best_few[:best_few.index(0)]
+
     best_few = [define_best_suggestion(j+1) for j in best_few]
     
     #print('--------------------------------------')

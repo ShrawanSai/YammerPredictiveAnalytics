@@ -32,7 +32,7 @@ def content_main():
             word_count = x[5]
             image_status = 'Yes' if x[8] == 1 else "No"
             image_type = image_type_dict[x[9]]
-            video = 'Yes' if x[10] == 1 else "No"
+            video_status = 'Yes' if x[10] == 1 else "No"
 
 
             st.header(f"Current Post Score: {round(score*1000,5)}")
@@ -56,6 +56,9 @@ def content_main():
                 c4.subheader(f"Image Type: {image_type}")
             else:
                 c4.subheader(f"Image: No")
+            if video_status == 'Yes':
+                c4.subheader(f"Video link:")
+                c4.markdown(video, unsafe_allow_html=True)
 
         
             #c5, c6 = st.beta_columns((1, 2))

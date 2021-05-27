@@ -144,7 +144,7 @@ def main():
 
         return df
 
-    if st.button("Train Modelfor suggestions"):
+    if st.button("Click here to train a Model in real time for suggestions"):
         df = datapreprocess(df)
         x = df[['Page total likes', 'Video', 'Status', 'Photo',
                 'Cat_1', 'Cat_2', 'Mo', 'Tu', 'Sa', "We", 'Th', 'Fr',
@@ -166,13 +166,16 @@ def main():
 
     d = {'Monday': 1, 'Tuesday': 2, 'Wednesday': 3,
          'Thursday': 4, 'Friday': 5, 'Saturday': 6, 'Sunday': 7}
+
+    st.subheader('Enter the time you want to post and we\'ll tell you how it might do!')
+    st.subheader('We can also help find the best time for posting your message :sunglasses:')
     post_day = st.text_input("Enter the day", "Sunday")
 
     post_timing = st.text_input("Enter the time", "5:00 (24 hour format)")
     hour = int(post_timing.split(" ")[0].split(':')[0]) % 18
 
-    st.subheader('Find you best Time for Post ::sunglasses::')
-    if st.button("Post Time Analysis"):
+    
+    if st.button("Generate Post Time suggestions"):
         start = int(d[post_day] - 1)
         timePivot = pd.pivot_table(df, aggfunc='median',
                                    columns='Post Hour',
@@ -184,12 +187,13 @@ def main():
         post_like_ratio = np.round(
             (timePivot.iloc[start:d[post_day]][hour].values[0] / timePivot.sum().sum()), 3)
         # st.write(timePivot.iloc[start:d[post_day]][hour].values[0])
-        cond = "Very Poor ! Please choose another timing." if post_like_ratio == 0 else "You can go for it."
-        st.write("You post could have the like perchentage is:",
-                 post_like_ratio, cond)
+        cond = "That's not a good time to post! Please choose another timing." if post_like_ratio == 0 else "Seems good enough to post"
+        st.write("Posting at this time yeilds a Post like percentage of :",post_like_ratio)
+        st.write(cond)
+                
 
         # Suggestion Of next Best Time
-        st.subheader("Suggestions....")
+        st.subheader("Here is a next best suggested timeslot")
 
         current_date = date.today()
         now = datetime.now()
@@ -211,6 +215,6 @@ def main():
         hours = best_hour-hour
 
         next_time = now = datetime.now()+timedelta(hours=hours)
-        next_time_string = next_time.strftime("%d/%m/%Y %H:%M:%S")
+        next_time_string = next_time.strftime("%d/%m/%Y - %H:%M")
 
         st.write("Next Best Time to Post: ", next_time_string)

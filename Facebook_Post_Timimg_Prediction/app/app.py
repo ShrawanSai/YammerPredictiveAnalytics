@@ -1,6 +1,6 @@
 import streamlit as st
 import post_timing_analysis
-# from content_analysis import content_main
+from content_analysis import content_main
 
 
 def main():
@@ -12,18 +12,18 @@ if __name__ == '__main__':
 
     # Sidebar
     activities = ["Home", "Yammer Post Content Analysis",
-                  "Active Engagement Index",
                   "Posts Timing Recommendation"]
     choice = st.sidebar.selectbox("Choose Activity", activities)
 
     if choice == "Home":
-        st.header(
-            'Empowering companies to jumpstart AI and generate real-world value')
-        st.subheader(
-            'Use exponential technologies to your advantage and lead your industry with confidence through innovation.')
+        st.header('Employee Engagement Solved')
+        st.subheader('Having trouble deciding on what time to post your message? Or still deciding what your message should include for Better Engagement?')
+        st.subheader('We\'ve got you covered!')
+
 
     if choice == "Posts Timing Recommendation":
         post_timing_analysis.main()
 
-    # if choice == "Yammer Post Content Analysis":
-    #     content_main()
+    if choice == "Yammer Post Content Analysis":
+        content_main()
+   
