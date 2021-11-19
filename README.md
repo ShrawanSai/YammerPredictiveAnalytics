@@ -13,10 +13,12 @@ The App helps users with 2 things
 All suggestions are made after taking into account the usage statistics of the social media group the user is in.
 
 The workflow diagram of the project is as follows:
+
 <img src = "workfloe_yammer.jpg"></img>
 
 The tweaks suggestion works by taking the content of the post the user wants to publish and computing a vector
 A vector that looks like this:
+
 <img src = "post_vector.jpg"></img>
 
 By training a model on an existing dataset for these posts, I compute the engagement score(a metric that involves number of likes, comments and shares) for the user's post.
